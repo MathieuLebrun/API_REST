@@ -22,7 +22,8 @@ router.post("/register", async (req, res) => { // Définition d'une route POST p
 });
 
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {// Route pour la connexion d'un utilisateur existant
+
     try {
         // Rechercher l'utilisateur dans la base de données par nom d'utilisateur
         const user = await User.findOne({ username: req.body.username });
