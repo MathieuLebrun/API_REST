@@ -1,27 +1,26 @@
+const router = require("express").Router(); // Importation du module express et création d'un routeur
+const User = require("../models/User"); // Importation du modèle User
+const CryptoJS = require("crypto-js"); // Importation de la bibliothèque CryptoJS
+const jwt = require("jsonwebtoken"); // Importation de la bibliothèque jsonwebtoken
 
 
-const router = require("express").Router();
-const User = require("../models/User");
-const CryptoJS = require("crypto-js");
-const jwt = require("jsonwebtoken");
-
-
-router.post("/register", async (req, res) => {
-    const newUser = new User({
-        username: req.body.username,
-        classe: req.body.classe,
-        email: req.body.email,
-        password: CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString(),
+router.post("/register", async (req, res) => { // Définition d'une route POST pour la création d'un utilisateur
+    const newUser = new User({ // Création d'un nouvel utilisateur à partir des informations fournies dans le corps de la requête
+        username: req.body.username, // Nom d'utilisateur fourni dans le corps de la requête
+        classe: req.body.classe, // Classe de l'utilisateur fournie dans le corps de la requête
+        email: req.body.email, // Adresse email de l'utilisateur fournie dans le corps de la requête
+        password: CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString(), // Cryptage du mot de passe fourni dans le corps de la requête à l'aide de la clé secrète PASS_SEC stockée dans les variables d'environnement
     });
     try {
-        const savedUser = await newUser.save();
-        res.status(200).json(savedUser);
+        const savedUser = await newUser.save(); // Enregistrement du nouvel utilisateur dans la base de données
+        res.status(200).json(savedUser); // Envoi d'une réponse HTTP 200 avec les informations de l'utilisateur créé en format JSON
 
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json(err); // Envoi d'une réponse HTTP 500 avec l'erreur rencontrée en format JSON
     }
 
 });
+
 
 router.post("/login", async (req, res) => {
     try {
@@ -66,6 +65,4 @@ router.post("/login", async (req, res) => {
     }
 });
 
-
-
-module.exports = router;
+module.exports = router; // Exporte la route pour l'utiliser dans l'application
